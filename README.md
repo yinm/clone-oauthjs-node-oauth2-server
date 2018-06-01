@@ -1,1 +1,1 @@
-# clone-oauthjs-node-oauth2-server
+Clone [oauthjs/node-oauth2-server: Complete, compliant and well tested module for implementing an OAuth2 Server/Provider with express in node.js](https://github.com/oauthjs/node-oauth2-server) for study.
