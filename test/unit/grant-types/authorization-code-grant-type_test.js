@@ -28,4 +28,25 @@ describe('AuthorizationCodeGrantType', () => {
         .catch(should.fail)
     })
   })
+
+  describe('revokeAuthorizationcode()', () => {
+    it('should call `model.revokeAuthorizationCode()`', () => {
+      const model = {
+        getAuthorizationCode: () => {},
+        revokeAuthorizationCode: sinon.stub().returns(true),
+        saveToken: () => {}
+      }
+      const handler = new AuthorizationCodeGrantType({ accessTokenLifetime: 120, model: model })
+      const authorizationCode = {}
+
+      return handler.revokeAuthorizationCode(authorizationCode)
+        .then(() => {
+          model.revokeAuthorizationCode.callCount.should.equal(1)
+          model.revokeAuthorizationCode.firstCall.args.should.have.length(1)
+          model.revokeAuthorizationCode.firstCall.args[0].should.equal(authorizationCode)
+          model.revokeAuthorizationCode.firstCall.thisValue.should.equal(model)
+        })
+        .catch(should.fail)
+    })
+  })
 })
