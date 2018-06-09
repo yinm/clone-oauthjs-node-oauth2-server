@@ -6,7 +6,7 @@ const should = require('should')
 
 describe('AbstractGrantType', () => {
   describe('generateAccessToken()', () => {
-    it('should call `model.generateAccessToken()', () => {
+    it('should call `model.generateAccessToken()`', () => {
       const model = {
         generateAccessToken: sinon.stub().returns({ client: {}, expiresAt: new Date(), user: {} })
       }
@@ -16,6 +16,22 @@ describe('AbstractGrantType', () => {
         .then(() => {
           model.generateAccessToken.callCount.should.equal(1)
           model.generateAccessToken.firstCall.thisValue.should.equal(model)
+        })
+        .catch(should.fail)
+    })
+  })
+
+  describe('generateRefreshToken()', () => {
+    it('should call `model.generateRefreshToken()`', () => {
+      const model = {
+        generateRefreshToken: sinon.stub().returns({ client: {}, expiresAt: new Date(new Date() / 2), user: {} })
+      }
+      const handler = new AbstractGrantType({ accessTokenLifetime: 120, model: model })
+
+      return handler.generateRefreshToken()
+        .then(function() {
+          model.generateRefreshToken.callCount.should.equal(1)
+          model.generateRefreshToken.firstCall.thisValue.should.equal(model)
         })
         .catch(should.fail)
     })
