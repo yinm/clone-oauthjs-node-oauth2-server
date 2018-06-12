@@ -58,4 +58,20 @@ describe('Request', () => {
     should.not.exist(response.headers.BAR)
   })
 
+  it('should include additional properties passed in the response', () => {
+    const originalResponse = generateBaseResponse()
+    originalResponse.custom = {
+      newFoo: 'newBar',
+    }
+    originalResponse.custom2 = {
+      newBar: 'newFoo',
+    }
+
+    const response = new Response(originalResponse)
+    response.headers.should.eql(originalResponse.headers)
+    response.body.should.eql(originalResponse.body)
+    response.custom.should.eql(originalResponse.custom)
+    response.custom2.should.eql(originalResponse.custom2)
+  })
+
 })
