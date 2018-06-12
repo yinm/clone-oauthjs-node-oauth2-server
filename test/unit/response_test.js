@@ -24,4 +24,14 @@ describe('Request', () => {
     response.status.should.eql(200)
   })
 
+  it('should allow a response to be passed without a body', () => {
+    const originalResponse = generateBaseResponse()
+    delete originalResponse.body
+
+    const response = new Response(originalResponse)
+    response.headers.should.eql(originalResponse.headers)
+    response.body.should.eql({})
+    response.status.should.eql(200)
+  })
+
 })
