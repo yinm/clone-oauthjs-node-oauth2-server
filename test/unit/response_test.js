@@ -44,4 +44,18 @@ describe('Request', () => {
     response.status.should.eql(200)
   })
 
+  it('should convert all header keys to lowercase', () => {
+    const originalResponse = generateBaseResponse()
+    originalResponse.headers = {
+      Foo: 'bar',
+      BAR: 'foo',
+    }
+
+    const response = new Response(originalResponse)
+    response.headers.foo.should.eql('bar')
+    response.headers.bar.should.eql('foo')
+    should.not.exist(response.headers.Foo)
+    should.not.exist(response.headers.BAR)
+  })
+
 })
