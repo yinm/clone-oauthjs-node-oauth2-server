@@ -81,4 +81,14 @@ describe('Request', () => {
     response.get('bar').should.eql(originalResponse.headers.bar)
   })
 
+  it('should allow setting of headers using `response.set`', () => {
+    const originalResponse = generateBaseResponse()
+
+    let response = new Response(originalResponse)
+    response.headers.should.eql(originalResponse.headers)
+    response.set('newheader', 'newvalue')
+    response.headers.bar.should.eql('foo')
+    response.headers.newheader.should.eql('newvalue')
+  })
+
 })
