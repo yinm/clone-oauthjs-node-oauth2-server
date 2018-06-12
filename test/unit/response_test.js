@@ -74,4 +74,11 @@ describe('Request', () => {
     response.custom2.should.eql(originalResponse.custom2)
   })
 
+  it('should allow getting of headers using `response.get`', () => {
+    const originalResponse = generateBaseResponse()
+
+    const response = new Response(originalResponse)
+    response.get('bar').should.eql(originalResponse.headers.bar)
+  })
+
 })
