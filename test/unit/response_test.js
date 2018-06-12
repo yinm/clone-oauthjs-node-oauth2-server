@@ -91,4 +91,14 @@ describe('Request', () => {
     response.headers.newheader.should.eql('newvalue')
   })
 
+  it('should process redirect', () => {
+    const originalResponse = generateBaseResponse()
+
+    const response = new Response(originalResponse)
+    response.headers.should.eql(originalResponse.headers)
+    response.status.should.eql(200)
+    response.redirect('http://foo.bar')
+    response.headers.location.should.eql('http://foo.bar')
+    response.status.should.eql(302)
+  })
 })
