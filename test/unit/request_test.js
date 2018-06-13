@@ -48,4 +48,13 @@ describe('Request', () => {
     }).should.throw('Missing parameter: `headers`')
   })
 
+  it("should throw if query string isn't passed to the constructor", () => {
+    const originalRequest = generateBaseRequest()
+    delete originalRequest.query;
+
+    (() => {
+      new Request(originalRequest)
+    }).should.throw('Missing parameter: `query`')
+  })
+
 })
