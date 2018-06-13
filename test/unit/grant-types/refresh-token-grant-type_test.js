@@ -161,5 +161,31 @@ describe('RefreshTokenGrantType', () => {
         .catch(should.fail)
     })
 
+    it('should call `model.saveToken()` with refresh token', () => {
+      const client = {}
+      const user = {}
+      const model = {
+        getRefreshToken() {},
+        revokeToken() {},
+        saveToken: sinon.stub().returns(true)
+      }
+      const handler = new RefreshTokenGrantType({ accessTokenLifetime: 120, model: model, alwaysIssueNewRefreshToken: true })
+
+      sinon.stub(handler, 'generateAccessToken').returns('foo')
+      sinon.stub(handler, 'generateRefreshToken').returns('bar')
+      sinon.stub(handler, 'getAccessTokenExpiresAt').returns('biz')
+      sinon.stub(handler, 'getRefreshTokenExpiresAt').returns('baz')
+
+      return handler.saveToken(user, client, 'foobar')
+        .then(() => {
+          model.saveToken.callCount.should.equal(1)
+          model.saveToken.firstCall.args.should.have.length(3)
+          model.saveToken.firstCall.args[0].should.eql({ accessToken: 'foo', accessTokenExpiresAt: 'biz', refreshToken: 'bar', refreshTokenExpiresAt: 'baz', scope: 'foobar' })
+          model.saveToken.firstCall.args[1].should.equal(client)
+          model.saveToken.firstCall.args[2].should.equal(user)
+          model.saveToken.firstCall.thisValue.should.equal(model)
+        })
+        .catch(should.fail)
+    })
   })
 })
