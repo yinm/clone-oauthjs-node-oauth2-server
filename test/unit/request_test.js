@@ -39,4 +39,13 @@ describe('Request', () => {
     request.body.should.eql({})
   })
 
+  it('should throw if headers are not passed to the constructor', () => {
+    const originalRequest = generateBaseRequest()
+    delete originalRequest.headers;
+
+    (() => {
+      new Request(originalRequest)
+    }).should.throw('Missing parameter: `headers`')
+  })
+
 })
