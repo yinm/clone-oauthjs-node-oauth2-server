@@ -29,4 +29,14 @@ describe('Request', () => {
     request.body.should.eql(originalRequest.body)
   })
 
+  it('should allow a request to be passed without a body', () => {
+    const originalRequest = generateBaseRequest()
+    delete originalRequest.body
+
+    const request = new Request(originalRequest)
+    request.headers.should.eql(originalRequest.headers)
+    request.query.should.eql(originalRequest.query)
+    request.body.should.eql({})
+  })
+
 })
