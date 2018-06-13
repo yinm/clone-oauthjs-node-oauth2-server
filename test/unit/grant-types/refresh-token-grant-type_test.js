@@ -29,4 +29,26 @@ describe('RefreshTokenGrantType', () => {
     })
   })
 
+  describe('getRefreshToken()', () => {
+    it('should call `model.getRefreshToken()`', () => {
+      const model = {
+        getRefreshToken: sinon.stub().returns({ accessToken: 'foo', client: {}, user: {} }),
+        saveToken: () => {},
+        revokeToken: () => {}
+      }
+      const handler = new RefreshTokenGrantType({ accessTokenLifetime: 120, model: model })
+      const request = new Request({ body: { refresh_token: 'bar' }, headers: {}, method: {}, query: {} })
+      const client = {}
+
+      return handler.getRefreshToken(request, client)
+        .then(() => {
+          model.getRefreshToken.callCount.should.equal(1)
+          model.getRefreshToken.firstCall.args.should.have.length(1)
+          model.getRefreshToken.firstCall.args[0].should.equal('bar')
+          model.getRefreshToken.firstCall.thisValue.should.equal(model)
+        })
+        .catch(should.fail)
+    })
+  })
+
 })
