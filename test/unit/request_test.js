@@ -66,4 +66,18 @@ describe('Request', () => {
     }).should.throw('Missing parameter: `method`')
   })
 
+  it('should convert all header keys to lowercase', () => {
+    const originalRequest = generateBaseRequest()
+    originalRequest.headers = {
+      Foo: 'bar',
+      BAR: 'foo',
+    }
+
+    const request = new Request(originalRequest)
+    request.headers.foo.should.eql('bar')
+    request.headers.bar.should.eql('foo')
+    should.not.exist(request.headers.Foo)
+    should.not.exist(request.headers.BAR)
+  })
+
 })
