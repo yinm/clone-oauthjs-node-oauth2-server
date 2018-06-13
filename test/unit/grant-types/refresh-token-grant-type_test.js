@@ -51,4 +51,24 @@ describe('RefreshTokenGrantType', () => {
     })
   })
 
+  describe('revokeToken()', () => {
+    it('should call `model.revokeToken()`', () => {
+      const model = {
+        getRefreshToken: () => {},
+        revokeToken: sinon.stub().returns({ accessToken: 'foo', client: {}, refreshTokenExpiresAt: new Date(new Date() / 2), user: {} }),
+        saveToken: () => {}
+      }
+      const handler = new RefreshTokenGrantType({ accessTokenLifetime: 120, model: model })
+      const token = {}
+
+      return handler.revokeToken(token)
+        .then(() => {
+          model.revokeToken.callCount.should.equal(1)
+          model.revokeToken.firstCall.args.should.have.length(1)
+          model.revokeToken.firstCall.args[0].should.equal(token)
+          model.revokeToken.firstCall.thisValue.should.equal(model)
+        })
+    })
+  })
+
 })
