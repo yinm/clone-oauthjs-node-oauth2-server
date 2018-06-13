@@ -80,4 +80,22 @@ describe('Request', () => {
     should.not.exist(request.headers.BAR)
   })
 
+  it('should include additional properties passed in the request', () => {
+    const originalRequest = generateBaseRequest()
+    originalRequest.custom = {
+      newFoo: 'newBar',
+    }
+    originalRequest.custom2 = {
+      newBar: 'newFoo',
+    }
+
+    const request = new Request(originalRequest)
+    request.headers.should.eql(originalRequest.headers)
+    request.method.should.eql(originalRequest.method)
+    request.query.should.eql(originalRequest.query)
+    request.body.should.eql(originalRequest.body)
+    request.custom.should.eql(originalRequest.custom)
+    request.custom2.should.eql(originalRequest.custom2)
+  })
+
 })
