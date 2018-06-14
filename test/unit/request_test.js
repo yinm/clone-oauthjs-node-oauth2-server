@@ -114,4 +114,12 @@ describe('Request', () => {
     request.is(request.headers['content-type']).should.eql('application/x-www-form-urlencoded')
   })
 
+  it('should return false if the content-type is invalid', () => {
+    const originalRequest = generateBaseRequest()
+    originalRequest.headers['content-type'] = 'application/x-www-form-urlencoded'
+    originalRequest.headers['content-length'] = JSON.stringify(originalRequest.body).length
+
+    const request = new Request(originalRequest)
+    request.is('application/json').should.eql(false)
+  })
 })
