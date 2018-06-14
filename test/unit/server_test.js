@@ -56,4 +56,19 @@ describe('Server', () => {
     })
   })
 
+  describe('token()', () => {
+    it('should call `handle`', () => {
+      const model = {
+        getClient() {},
+        saveToken() {},
+      }
+      const server = new Server({ model: model })
+      sinon.stub(TokenHandler.prototype, 'handle').returns(Promise.resolve())
+      server.token('foo', 'bar')
+
+      TokenHandler.prototype.handle.callCount.should.equal(1)
+      TokenHandler.prototype.handle.firstCall.args[0].should.equal('foo')
+      TokenHandler.prototype.handle.restore()
+    })
+  })
 })
