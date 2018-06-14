@@ -105,4 +105,13 @@ describe('Request', () => {
     request.get('bar').should.eql(originalRequest.headers.bar)
   })
 
+  it('should validate the content-type', () => {
+    const originalRequest = generateBaseRequest()
+    originalRequest.headers['content-type'] = 'application/x-www-form-urlencoded'
+    originalRequest.headers['content-length'] = JSON.stringify(originalRequest.body).length
+
+    const request = new Request(originalRequest)
+    request.is(request.headers['content-type']).should.eql('application/x-www-form-urlencoded')
+  })
+
 })
