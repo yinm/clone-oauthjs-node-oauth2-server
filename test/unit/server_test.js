@@ -37,6 +37,23 @@ describe('Server', () => {
       AuthenticateHandler.prototype.handle.firstCall.thisValue.should.have.property('scope', 'test')
       AuthenticateHandler.prototype.handle.restore()
     })
-
   })
+
+  describe('authorize()', () => {
+    it('should call `handle`', () => {
+      const model = {
+        getAccessToken() {},
+        getClient() {},
+        saveAuthorizationCode() {},
+      }
+      const server = new Server({ model: model })
+      sinon.stub(AuthorizeHandler.prototype, 'handle').returns(Promise.resolve())
+      server.authorize('foo', 'bar')
+
+      AuthorizeHandler.prototype.handle.callCount.should.equal(1)
+      AuthorizeHandler.prototype.handle.firstCall.args[0].should.equal('foo')
+      AuthorizeHandler.prototype.handle.restore()
+    })
+  })
+
 })
