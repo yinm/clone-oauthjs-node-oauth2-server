@@ -63,6 +63,24 @@ describe('AuthenticateHandler', () => {
         handler.getTokenFromRequestBody.restore()
       })
     })
-
   })
+
+  describe('getAccessToken()', () => {
+    it('should call `model.getAccessToken()`', () => {
+      const model = {
+        getAccessToken: sinon.stub().returns({ user: {} })
+      }
+      const handler = new AuthenticateHandler({ model: model })
+
+      return handler.getAccessToken('foo')
+        .then(() => {
+          model.getAccessToken.callCount.should.equal(1)
+          model.getAccessToken.firstCall.args.should.have.length(1)
+          model.getAccessToken.firstCall.args[0].should.equal('foo')
+          model.getAccessToken.firstCall.thisValue.should.equal(model)
+        })
+        .catch(should.fail)
+    })
+  })
+
 })
