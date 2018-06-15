@@ -159,7 +159,8 @@ describe('AuthenticateHandler', () => {
         .then(() => {
           model.verifyScope.callCount.should.equal(1)
           model.verifyScope.firstCall.args.should.have.length(2)
-          model.verifyScope.firstCall.args[0].should.equal('foo', 'bar')
+          model.verifyScope.firstCall.args[0].should.equal('foo')
+          model.verifyScope.firstCall.args[1].should.equal('bar')
           model.verifyScope.firstCall.thisValue.should.equal(model)
         })
         .catch(should.call)
