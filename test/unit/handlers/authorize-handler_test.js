@@ -47,4 +47,26 @@ describe('AuthorizeHandler', () => {
     })
   })
 
+  describe('getUser()', () => {
+    it('should call `authenticateHandler.getUser()`', () => {
+      const authenticateHandler = { handle: sinon.stub().returns(Promise.resolve({})) }
+      const model = {
+        getClient() {},
+        saveAuthorizationCode() {},
+      }
+      const handler = new AuthorizeHandler({ authenticateHandler: authenticateHandler, authorizationCodeLifetime: 120, model: model })
+      const request = new Request({ body: {}, headers: {}, method: {}, query: {} })
+      const response = new Response()
+
+      return handler.getUser(request, response)
+        .then(() => {
+          authenticateHandler.handle.callCount.should.equal(1)
+          authenticateHandler.handle.firstCall.args.should.have.length(2)
+          authenticateHandler.handle.firstCall.args[0].should.equal(request)
+          authenticateHandler.handle.firstCall.args[1].should.equal(response)
+        })
+        .catch(should.fail)
+    })
+  })
+
 })
