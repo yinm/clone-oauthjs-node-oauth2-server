@@ -5,6 +5,7 @@ const Request = require('../../../lib/request')
 const sinon = require('sinon')
 const should = require('should')
 const ServerError = require('../../../lib/errors/server-error')
+const InvalidTokenError = require('../../../lib/errors/invalid-token-error')
 
 describe('AuthenticateHandler', () => {
   describe('getTokenFromRequest()', () => {
@@ -98,6 +99,26 @@ describe('AuthenticateHandler', () => {
       }
       catch(err) {
         err.should.be.an.instanceOf(ServerError)
+        failed = true
+      }
+      failed.should.equal(true)
+    })
+
+    it('should fail if token has expired `accessTokenExpiresAt` date', () => {
+      const model = {
+        getAccessToken() {},
+      }
+      const handler = new AuthenticateHandler({ model: model })
+
+      let failed = false
+      try {
+        handler.validateAccessToken({
+          user: {},
+          accessTokenExpiresAt: new Date(new Date().getTime() - 100000)
+        })
+      }
+      catch(err) {
+        err.should.be.an.instanceOf(InvalidTokenError)
         failed = true
       }
       failed.should.equal(true)
