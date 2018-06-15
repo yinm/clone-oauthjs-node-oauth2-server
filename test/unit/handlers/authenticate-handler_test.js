@@ -142,4 +142,27 @@ describe('AuthenticateHandler', () => {
     })
   })
 
+  describe('verifyScope()', () => {
+    it('should call `model.getAccessToken()` if scope is defined', () => {
+      const model = {
+        getAccessToken() {},
+        verifyScope: sinon.stub().returns(true),
+      }
+      const handler = new AuthenticateHandler({
+        addAcceptedScopesHeader: true,
+        addAuthorizedScopesHeader: true,
+        model: model,
+        scope: 'bar'
+      })
+
+      return handler.verifyScope('foo')
+        .then(() => {
+          model.verifyScope.callCount.should.equal(1)
+          model.verifyScope.firstCall.args.should.have.length(2)
+          model.verifyScope.firstCall.args[0].should.equal('foo', 'bar')
+          model.verifyScope.firstCall.thisValue.should.equal(model)
+        })
+        .catch(should.call)
+    })
+  })
 })
