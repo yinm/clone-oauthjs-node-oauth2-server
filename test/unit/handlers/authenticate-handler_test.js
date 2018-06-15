@@ -83,4 +83,26 @@ describe('AuthenticateHandler', () => {
     })
   })
 
+  describe('validateAccessToken()', () => {
+    it('should fail if token has no valid `accessTokenExpiresAt` date', () => {
+      const model = {
+        getAccessToken() {},
+      }
+      const handler = new AuthenticateHandler({ model: model })
+
+      let failed = false
+      try {
+        handler.validateAccessToken({
+          user: {}
+        })
+      }
+      catch(err) {
+        err.should.be.an.instanceOf(ServerError)
+        failed = true
+      }
+      failed.should.equal(true)
+    })
+
+  })
+
 })
