@@ -45,5 +45,24 @@ describe('AuthenticateHandler', () => {
       })
     })
 
+    describe('with bearer token in the request body', () => {
+      it('should call `getTokenFromRequestBody()`', () => {
+        const handler = new AuthenticateHandler({ model: { getAccessToken() {} } })
+        const request = new Request({
+          body: { access_token: 'foo' },
+          headers: {},
+          method: {},
+          query: {}
+        })
+
+        sinon.stub(handler, 'getTokenFromRequestBody')
+        handler.getTokenFromRequest(request)
+
+        handler.getTokenFromRequestBody.callCount.should.equal(1)
+        handler.getTokenFromRequestBody.firstCall.args[0].should.equal(request)
+        handler.getTokenFromRequestBody.restore()
+      })
+    })
+
   })
 })
